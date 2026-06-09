@@ -16,7 +16,7 @@ load_dotenv()
 class SRTTranslatorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("SRT 台灣口語化精確翻譯軟體 v1.0")
+        self.root.title("SRT 台灣口語化精確翻譯軟體 v1.1")
         self.root.geometry("600x450")
         
         self.srt_path = tk.StringVar()
