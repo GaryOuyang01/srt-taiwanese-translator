@@ -28,17 +28,22 @@ class SRTTranslatorApp:
         self.create_widgets()
         
     def create_widgets(self):
+        # API 設定區域
         frame_api = ttk.LabelFrame(self.root, text="Gemini API 設定", padding=10)
         frame_api.pack(fill="x", padx=10, pady=5)
         ttk.Label(frame_api, text="API Key:").pack(side="left")
-        ttk.Entry(frame_api, textvariable=self.api_key, width=35, show="*").pack(side="left", padx=5)
+        ttk.Entry(frame_api, textvariable=self.api_key, width=65, show="*").pack(side="left", padx=5)
         
-        ttk.Label(frame_api, text="模型:").pack(side="left", padx=(10, 0))
-        model_combo = ttk.Combobox(frame_api, textvariable=self.model_var, values=["gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-pro-latest"], width=20, state="readonly")
+        # 翻譯選項區域
+        frame_options = ttk.LabelFrame(self.root, text="翻譯選項", padding=10)
+        frame_options.pack(fill="x", padx=10, pady=5)
+        
+        ttk.Label(frame_options, text="模型:").pack(side="left")
+        model_combo = ttk.Combobox(frame_options, textvariable=self.model_var, values=["gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-pro-latest"], width=25, state="readonly")
         model_combo.pack(side="left", padx=5)
         
-        ttk.Label(frame_api, text="風格:").pack(side="left", padx=(10, 0))
-        style_combo = ttk.Combobox(frame_api, textvariable=self.style_var, values=["輕度口語化", "中度口語化"], width=10, state="readonly")
+        ttk.Label(frame_options, text="風格:").pack(side="left", padx=(20, 0))
+        style_combo = ttk.Combobox(frame_options, textvariable=self.style_var, values=["輕度口語化", "中度口語化"], width=15, state="readonly")
         style_combo.pack(side="left", padx=5)
         
         # 檔案選擇區域
