@@ -22,6 +22,7 @@ class SRTTranslatorApp:
         self.srt_path = tk.StringVar()
         self.api_key = tk.StringVar(value=os.getenv("GEMINI_API_KEY", ""))
         self.model_var = tk.StringVar(value="gemini-3.1-pro-preview")
+        self.style_var = tk.StringVar(value="中度口語化")
         self.status_var = tk.StringVar(value="請選擇 SRT 檔案並輸入 API Key")
         
         self.create_widgets()
@@ -35,6 +36,10 @@ class SRTTranslatorApp:
         ttk.Label(frame_api, text="模型:").pack(side="left", padx=(10, 0))
         model_combo = ttk.Combobox(frame_api, textvariable=self.model_var, values=["gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-pro-latest"], width=20, state="readonly")
         model_combo.pack(side="left", padx=5)
+        
+        ttk.Label(frame_api, text="風格:").pack(side="left", padx=(10, 0))
+        style_combo = ttk.Combobox(frame_api, textvariable=self.style_var, values=["輕度口語化", "中度口語化"], width=10, state="readonly")
+        style_combo.pack(side="left", padx=5)
         
         # 檔案選擇區域
         frame_file = ttk.LabelFrame(self.root, text="檔案選擇", padding=10)
@@ -112,11 +117,15 @@ class SRTTranslatorApp:
                 
             client = genai.Client(api_key=self.api_key.get().strip())
             
+            style_prompt = "自然、流暢的『台灣口語化中文』，使其非常符合台灣在地用語習慣。"
+            if self.style_var.get() == "輕度口語化":
+                style_prompt = "『輕度台灣口語化中文』，保留原本的語意與語氣，稍微調整用詞使其符合台灣在地習慣即可，不要過度改寫。"
+                
             system_instruction = (
-                "你是一個專業的台灣影視字幕翻譯員。請將輸入的 JSON 陣列中的每一句簡體或繁體字幕翻譯成自然、流暢的『台灣口語化中文』。\n"
+                f"你是一個專業的台灣影視字幕翻譯員。請將輸入的 JSON 陣列中的每一句簡體或繁體字幕翻譯成{style_prompt}\n"
                 "請嚴格遵守以下規則：\n"
                 "1. 絕對不要加入任何不必要的數字、標點符號或註解，只回傳純文字翻譯。\n"
-                "2. 保持句意精確，符合台灣在地用語習慣。\n"
+                "2. 保持句意精確。\n"
                 "3. 確保你的回傳格式是一個 JSON 字串陣列 (例如: [\"翻譯結果一\", \"翻譯結果二\"])。\n"
                 "4. 你回傳的 JSON 陣列長度，必須與輸入的 JSON 陣列長度完全一致，且順序完美對應。"
             )
